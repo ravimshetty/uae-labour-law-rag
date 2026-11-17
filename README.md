@@ -394,7 +394,7 @@ uae-labour-law-rag/
 │   └── api/                   # FastAPI app + static RTL UI
 ├── scripts/                   # ingest · ask · eval · download_sources
 ├── evals/golden.yaml
-├── tests/                     # 39 unit, API and end-to-end tests
+├── tests/                     # 37 unit, API and end-to-end tests
 ├── Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 └── docs/img/                  # screenshots
 ```
