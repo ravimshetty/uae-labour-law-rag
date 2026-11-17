@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UAE Labour Law Assistant · مساعد قانون العمل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d232a; --muted: #67707a; --line: #e4e1d9;
+    --accent: #0f6b5c; --accent-soft: #e3f1ee; --warn: #9a5b00; --warn-soft: #fdf1de; --block: #a3262a;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.55 Inter, "Segoe UI", system-ui, sans-serif; }
+  header { padding: 22px 28px 8px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 20px; font-weight: 600; }
+  header .ar { font-family: "IBM Plex Sans Arabic", "Geeza Pro", "Segoe UI", sans-serif; color: var(--muted); }
+  main { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(360px, 1.25fr); gap: 20px; padding: 12px 28px 40px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 12px 14px 32px; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  label { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  textarea { width: 100%; min-height: 130px; margin-top: 8px; padding: 12px 14px; border: 1px solid var(--line);
+             border-radius: 10px; font: inherit; resize: vertical; background: #fcfcfa; unicode-bidi: plaintext; }
+  textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  .row { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; padding: 8px 12px; font: inherit; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .go { margin-left: auto; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px;
+        font: inherit; font-weight: 600; cursor: pointer; }
+  .go:disabled { opacity: .55; cursor: wait; }
+  .examples { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--line); background: #fbfaf7; border-radius: 999px; padding: 6px 12px; font-size: 13px;
+          cursor: pointer; unicode-bidi: plaintext; }
+  .chip:hover { border-color: var(--accent); }
+  .note { margin-top: 18px; font-size: 12.5px; color: var(--muted); }
+  .answer { direction: rtl; text-align: right; font-family: "IBM Plex Sans Arabic", "Geeza Pro", "Segoe UI", sans-serif;
+            font-size: 17px; line-height: 1.95; white-space: pre-wrap; min-height: 160px; }
+  .answer .cite { color: var(--accent); font-weight: 600; font-size: 13px; vertical-align: super; cursor: pointer; }
+  .answer .disc { display: block; margin-top: 14px; font-size: 13.5px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+  .placeholder { color: var(--muted); font-size: 14px; direction: ltr; text-align: left; font-family: Inter, sans-serif; }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); }
+  .badge.block { background: #fbe5e5; color: var(--block); }
+  .gist { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+  .cites { margin-top: 18px; display: grid; gap: 10px; }
+  .src { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; direction: rtl; text-align: right;
+         font-family: "IBM Plex Sans Arabic", "Segoe UI", sans-serif; font-size: 14px; }
+  .src b { color: var(--accent); }
+  .src .snip { color: var(--muted); font-size: 13px; margin-top: 4px; unicode-bidi: plaintext; }
+  .src a { font-size: 12px; color: var(--muted); }
+  .tools { display: flex; gap: 8px; margin-top: 12px; }
+  .tools button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 5px 10px; font-size: 12.5px; cursor: pointer; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-right-color: transparent; border-radius: 50%; animation: s 0.8s linear infinite; vertical-align: -2px; }
+  @keyframes s { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>UAE Labour &amp; DIFC Employment Law Assistant</h1>
+  <span class="ar">مساعد قانون العمل في الإمارات ومركز دبي المالي العالمي</span>
+</header>
+
+<main>
+  <section class="card">
+    <label for="q">Your question (English, Arabic, or mixed)</label>
+    <textarea id="q" placeholder="e.g. How many days of annual leave do I get after 8 months?"></textarea>
+    <div class="row">
+      <div class="seg" id="jur">
+        <button data-v="" class="on">Auto</button>
+        <button data-v="federal">Mainland</button>
+        <button data-v="difc">DIFC</button>
+        <button data-v="both">Compare</button>
+      </div>
+      <button class="go" id="go">Ask · اسأل</button>
+    </div>
+    <div class="examples" id="ex"></div>
+    <p class="note">Personal details (Emirates ID, phone, email, IBAN, passport) are masked before the question leaves this server.
+      Answers are general legal information, not legal advice.</p>
+  </section>
+
+  <section class="card">
+    <div class="meta" id="meta"></div>
+    <div class="answer" id="answer"><div class="placeholder">The Arabic answer with article citations will appear here.</div></div>
+    <div class="gist" id="gist"></div>
+    <div class="tools" id="tools" hidden>
+      <button id="copy">Copy Arabic answer</button>
+      <button id="toggleGist">Show English gist</button>
+    </div>
+    <div class="cites" id="cites"></div>
+  </section>
+</main>
+
+<script>
+const EXAMPLES = [
+  "How much gratuity do I get after 7 years in mainland?",
+  "how many days ijaza in DIFC?",
+  "notice period فترة الإنذار if I resign?",
+  "Is overtime paid extra? my mobile is 050 123 4567",
+  "probation period max for DIFC vs mainland",
+  "sick leave كم يوم بأجر كامل؟",
+];
+const $ = (id) => document.getElementById(id);
+let jurisdiction = "";
+let lastGist = "";
+
+for (const e of EXAMPLES) {
+  const b = document.createElement("button");
+  b.className = "chip"; b.textContent = e;
+  b.onclick = () => { $("q").value = e; ask(); };
+  $("ex").appendChild(b);
+}
+$("jur").onclick = (ev) => {
+  if (ev.target.tagName !== "BUTTON") return;
+  [...$("jur").children].forEach((x) => x.classList.toggle("on", x === ev.target));
+  jurisdiction = ev.target.dataset.v;
+};
+$("q").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ask(); });
+$("go").onclick = ask;
+$("copy").onclick = () => navigator.clipboard.writeText($("answer").innerText);
+$("toggleGist").onclick = () => {
+  const hidden = !$("gist").textContent;
+  $("gist").textContent = hidden ? lastGist : "";
+  $("toggleGist").textContent = hidden ? "Hide English gist" : "Show English gist";
+};
+
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const JUR = { federal: "Mainland · القانون الاتحادي", difc: "DIFC · مركز دبي المالي العالمي", both: "Compared · مقارنة" };
+const PII = { EMIRATES_ID: "Emirates ID", PHONE: "phone", EMAIL: "email", IBAN: "IBAN", CARD: "card", PASSPORT: "passport", PERSON: "name" };
+
+function render(d) {
+  const meta = [];
+  if (d.jurisdiction && JUR[d.jurisdiction]) meta.push(`<span class="badge">${JUR[d.jurisdiction]}</span>`);
+  for (const [k, n] of Object.entries(d.redactions || {})) meta.push(`<span class="badge">🔒 masked ${n} ${PII[k] || k}</span>`);
+  for (const f of d.flags || []) {
+    if (["code_switched_query"].includes(f.name)) meta.push(`<span class="badge">mixed EN/AR detected</span>`);
+    if (f.severity === "warn" && f.name !== "pii_redacted") meta.push(`<span class="badge warn">${esc(f.name)}</span>`);
+    if (f.severity === "block") meta.push(`<span class="badge block">${esc(f.name)}</span>`);
+  }
+  $("meta").innerHTML = meta.join("");
+
+  const parts = d.answer_ar.split(/\n\n(?=تنبيه:)/);
+  let html = esc(parts[0]).replace(/\[(S\d+)\]/g, '<span class="cite" data-ref="$1">[$1]</span>');
+  if (parts[1]) html += `<span class="disc">${esc(parts[1])}</span>`;
+  $("answer").innerHTML = html;
+
+  lastGist = d.english_gist || "";
+  $("gist").textContent = "";
+  $("toggleGist").textContent = "Show English gist";
+  $("tools").hidden = d.blocked;
+
+  $("cites").innerHTML = (d.citations || []).map((c) => `
+    <div class="src" id="c-${c.ref}">
+      <b>[${c.ref}]</b> ${esc(c.law_name_ar)} — المادة (${esc(c.article)}) ${c.title ? "· " + esc(c.title) : ""}
+      <div class="snip">${esc(c.snippet)}…</div>
+      ${c.source_url ? `<a href="${esc(c.source_url)}" target="_blank" rel="noopener noreferrer">official source ↗</a>` : ""}
+    </div>`).join("");
+  document.querySelectorAll(".cite").forEach((el) =>
+    el.onclick = () => document.getElementById("c-" + el.dataset.ref)?.scrollIntoView({ behavior: "smooth" }));
+}
+
+async function ask() {
+  const query = $("q").value.trim();
+  if (query.length < 3) return;
+  $("go").disabled = true; $("go").innerHTML = '<span class="spinner"></span>';
+  try {
+    const r = await fetch("/api/ask", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, jurisdiction: jurisdiction || null }),
+    });
+    if (!r.ok) throw new Error(r.status === 429 ? "Too many requests – wait a minute." : `Error ${r.status}`);
+    render(await r.json());
+  } catch (e) {
+    $("answer").innerHTML = `<div class="placeholder">${esc(e.message)}</div>`;
+  } finally {
+    $("go").disabled = false; $("go").textContent = "Ask · اسأل";
+  }
+}
+</script>
+</body>
+</html>

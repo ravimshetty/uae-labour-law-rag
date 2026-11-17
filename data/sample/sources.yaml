@@ -1,0 +1,34 @@
+# Sample knowledge base (SYNTHETIC paraphrases) – lets you run the whole system
+# offline in 1 minute. Use data/sources.yaml with the official PDFs for real use.
+documents:
+  - doc_id: fdl-33-2021-en
+    pair: fdl-33-2021
+    jurisdiction: federal
+    lang: en
+    authoritative: false
+    law_name: "Federal Decree-Law No. (33) of 2021 (SAMPLE)"
+    law_name_ar: "المرسوم بقانون اتحادي رقم (33) لسنة 2021 (عينة)"
+    url: "https://u.ae/-/media/Mohre-2024/Federal-DecreeLaw-No-33-of-2021-Regarding-the-Regulation-of-Employment-Relationship-and-its-amendmen.pdf"
+    file: data/sample/federal_sample_en.txt
+    article_pattern: '^\s*Article\s*\(\s*(\d+)\s*\)'
+  - doc_id: fdl-33-2021-ar
+    pair: fdl-33-2021
+    jurisdiction: federal
+    lang: ar
+    authoritative: true
+    law_name: "المرسوم بقانون اتحادي رقم (33) لسنة 2021 (عينة)"
+    law_name_en: "Federal Decree-Law No. (33) of 2021 (SAMPLE)"
+    url: "https://uaelegislation.gov.ae/ar/legislations/1541"
+    file: data/sample/federal_sample_ar.txt
+    article_pattern: '^\s*(?:ال)?مادة\s*\(\s*([0-9٠-٩]+)\s*\)'
+  - doc_id: difc-2-2019-en
+    pair: difc-2-2019
+    jurisdiction: difc
+    lang: en
+    authoritative: true
+    law_name: "DIFC Employment Law No. 2 of 2019 (SAMPLE)"
+    law_name_ar: "قانون التوظيف لمركز دبي المالي العالمي رقم (2) لسنة 2019 (عينة)"
+    url: "https://edge.sitecorecloud.io/dubaiintern0078-difcexperie96c5-production-3253/media/project/difcexperiences/difc/difcwebsite/documents/laws--regulations/employment-law.pdf"
+    file: data/sample/difc_sample_en.txt
+    article_pattern: '^\s*(\d{1,3})\.\s+([A-Z][A-Za-z ,’''\-()/]{2,80})$'
+    skip_until_pattern: '^\s*PART 1'

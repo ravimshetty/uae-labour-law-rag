@@ -1,0 +1,17 @@
+[project]
+name = "uae-labour-rag"
+version = "1.0.0"
+description = "Bilingual (EN query -> AR answer) RAG over UAE Federal Labour Law and DIFC Employment Law, with guardrails, PII protection and code-switching support"
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+src = ["src"]

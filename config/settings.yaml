@@ -1,0 +1,55 @@
+# ---------------------------------------------------------------------------
+# UAE Labour Law + DIFC Employment Law bilingual RAG – runtime settings
+# Every key can be overridden with env vars:  RAG_<SECTION>__<KEY>=value
+# ---------------------------------------------------------------------------
+
+app:
+  name: "UAE Labour & DIFC Employment Law Assistant"
+  answer_language: ar          # responses are always Modern Standard Arabic
+  include_english_gist: true   # one-line EN summary for reviewers / bilingual users
+  digits: western              # western (0-9) | arabic_indic (٠-٩) in the answer
+
+paths:
+  sources: data/sources.yaml
+  raw_dir: data/raw
+  index_dir: data/index
+  audit_log: logs/audit.jsonl
+  glossary: config/glossary.yaml
+
+llm:
+  provider: mock               # mock | openai | azure_openai
+  model: gpt-4o-mini           # OpenAI model or Azure deployment name
+  temperature: 0.0
+  max_tokens: 900
+  timeout_s: 60
+
+embeddings:
+  provider: hashing            # hashing (offline) | openai | azure_openai
+  model: text-embedding-3-large
+  dim: 1024                    # used by the hashing embedder
+
+retrieval:
+  top_k_bm25: 20
+  top_k_dense: 20
+  rrf_k: 60
+  final_k: 6                   # articles passed to the LLM
+  min_score: 0.0
+  use_reranker: false          # true -> cross-encoder (sentence-transformers) if installed
+  reranker_model: BAAI/bge-reranker-v2-m3
+
+router:
+  default_when_ambiguous: both # both | federal | ask
+
+guardrails:
+  max_query_chars: 1500
+  block_prompt_injection: true
+  min_arabic_ratio: 0.6        # output must be >= 60% Arabic letters (excluding citations/numbers)
+  require_citations: true
+  numeric_grounding: true      # numbers in the answer must appear in the retrieved sources
+  max_regenerations: 1
+
+privacy:
+  redact_before_llm: true
+  rehydrate_user_pii_in_answer: false  # keep placeholders in the answer by default
+  audit_store_raw_query: false          # never store raw text; only redacted + sha256
+  audit_retention_days: 30

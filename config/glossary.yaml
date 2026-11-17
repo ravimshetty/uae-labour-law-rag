@@ -1,0 +1,77 @@
+# Bilingual legal glossary used for:
+#   1. code-switch normalisation (Arabic / Arabizi tokens inside an English query)
+#   2. cross-lingual query expansion (EN query -> AR query terms for BM25 on Arabic text)
+#   3. terminology consistency in the Arabic answer (preferred AR term)
+#
+# `ar` – first entry is the preferred Arabic term used in answers.
+# `arabizi` – Latin-script Arabic users type in chats (lower-case).
+
+concepts:
+  end_of_service_gratuity:
+    en: [gratuity, end of service, end-of-service, eosb, end of service benefit, end of service gratuity]
+    ar: [مكافأة نهاية الخدمة, مكافاة نهاية الخدمة, نهاية الخدمة, المكافأة]
+    arabizi: [mukafa2a, mukafaa, mokafaa, nihayat al khidma, nehayet el khedma]
+  probation:
+    en: [probation, probation period, probationary period, trial period]
+    ar: [فترة التجربة, التجربة, مدة الاختبار]
+    arabizi: [fatrat al tajruba, fatret tajrobe, tajruba]
+  annual_leave:
+    en: [annual leave, vacation leave, vacation, paid leave, holiday entitlement]
+    ar: [الإجازة السنوية, الاجازة السنوية, إجازة سنوية, اجازة]
+    arabizi: [ijaza, ejaza, ajaza, ijaza sanawiya]
+  sick_leave:
+    en: [sick leave, sickness leave, medical leave, sick pay]
+    ar: [الإجازة المرضية, اجازة مرضية, إجازة مرضية]
+    arabizi: [ijaza maradiya, ejaza maradeye]
+  maternity_leave:
+    en: [maternity leave, maternity, maternity pay]
+    ar: [إجازة الوضع, إجازة الأمومة, اجازة الامومة]
+    arabizi: [ijazat al umooma]
+  notice_period:
+    en: [notice period, notice, termination notice, resignation notice]
+    ar: [فترة الإنذار, مهلة الإشعار, الإنذار, الإشعار]
+    arabizi: [indhar, inzar, ishaar]
+  termination:
+    en: [termination, terminate, dismissal, fired, resign, resignation, end of contract]
+    ar: [إنهاء عقد العمل, انهاء العقد, الفصل, الاستقالة, إنهاء الخدمة]
+    arabizi: [faṣl, fasl, esti2ala, isti2ala]
+  wages:
+    en: [wage, wages, salary, basic salary, pay, remuneration]
+    ar: [الأجر, الاجر, الراتب, الأجر الأساسي]
+    arabizi: [ratib, raateb, rateb, ajr]
+  working_hours:
+    en: [working hours, work hours, overtime, weekly rest, rest day]
+    ar: [ساعات العمل, العمل الإضافي, الراحة الأسبوعية]
+    arabizi: [sa3at al 3amal, sa3at el shoghl]
+  employment_contract:
+    en: [employment contract, labour contract, contract, fixed-term, fixed term]
+    ar: [عقد العمل, العقد محدد المدة, عقد]
+    arabizi: [3aqd, aqd, 3a2d]
+  employer:
+    en: [employer, company, sponsor]
+    ar: [صاحب العمل, المنشأة, الكفيل]
+    arabizi: [kafeel, kafil, sahib al 3amal]
+  employee:
+    en: [employee, worker, staff]
+    ar: [العامل, الموظف]
+    arabizi: [3amil, muwazzaf, mowazaf]
+  labour_complaint:
+    en: [labour complaint, labor complaint, claim, dispute, labour case, court]
+    ar: [الشكوى العمالية, النزاع العمالي, الدعوى العمالية]
+    arabizi: [shakwa, shakwa 3omaliya]
+  wps:
+    en: [wps, wage protection system, wage protection]
+    ar: [نظام حماية الأجور]
+    arabizi: []
+  mohre:
+    en: [mohre, ministry of human resources, labour ministry, ministry of labour]
+    ar: [وزارة الموارد البشرية والتوطين, الوزارة]
+    arabizi: []
+  difc:
+    en: [difc, dubai international financial centre, dubai international financial center, difc courts, dews, qualifying scheme]
+    ar: [مركز دبي المالي العالمي, محاكم مركز دبي المالي العالمي]
+    arabizi: []
+  non_compete:
+    en: [non-compete, non compete, restrictive covenant]
+    ar: [عدم المنافسة, شرط عدم المنافسة]
+    arabizi: []

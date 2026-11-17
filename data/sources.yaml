@@ -1,0 +1,56 @@
+# Source documents for the knowledge base.
+# Download the official PDFs into data/raw/ (see scripts/download_sources.py) and
+# keep `file` in sync. URLs verified Nov 2026 – re-check for newer consolidated versions.
+#
+# Legal precedence:
+#   * Federal Decree-Law 33/2021: the ARABIC text prevails (uaelegislation.gov.ae disclaimer).
+#   * DIFC Employment Law 2/2019: issued in ENGLISH; no official Arabic version.
+
+documents:
+  - doc_id: fdl-33-2021-en
+    pair: fdl-33-2021
+    jurisdiction: federal
+    lang: en
+    authoritative: false
+    law_name: "Federal Decree-Law No. (33) of 2021 Regarding the Regulation of Employment Relationships (as amended)"
+    law_name_ar: "المرسوم بقانون اتحادي رقم (33) لسنة 2021 بشأن تنظيم علاقات العمل وتعديلاته"
+    url: "https://u.ae/-/media/Mohre-2024/Federal-DecreeLaw-No-33-of-2021-Regarding-the-Regulation-of-Employment-Relationship-and-its-amendmen.pdf"
+    file: data/raw/fdl-33-2021-en.pdf
+    article_pattern: '^\s*Article\s*\(\s*(\d+)\s*\)'
+    stop_pattern: '^\s*Cabinet Resolution No\.'   # MOHRE PDF appends the Executive Regulation
+
+  - doc_id: fdl-33-2021-ar
+    pair: fdl-33-2021
+    jurisdiction: federal
+    lang: ar
+    authoritative: true
+    law_name: "المرسوم بقانون اتحادي رقم (33) لسنة 2021 بشأن تنظيم علاقات العمل وتعديلاته"
+    law_name_en: "Federal Decree-Law No. (33) of 2021 (as amended)"
+    url: "https://uaelegislation.gov.ae/ar/legislations/1541"
+    file: data/raw/fdl-33-2021-ar.pdf
+    article_pattern: '^\s*(?:ال)?مادة\s*\(\s*([0-9٠-٩]+)\s*\)'
+
+  - doc_id: cr-1-2022-en
+    pair: cr-1-2022
+    jurisdiction: federal
+    lang: en
+    authoritative: false
+    optional: true
+    law_name: "Cabinet Resolution No. (1) of 2022 on the Implementation of Federal Decree-Law No. (33) of 2021"
+    law_name_ar: "قرار مجلس الوزراء رقم (1) لسنة 2022 بشأن اللائحة التنفيذية للمرسوم بقانون اتحادي رقم (33) لسنة 2021"
+    url: "https://www.mohre.gov.ae/"
+    file: data/raw/cr-1-2022-en.pdf
+    article_pattern: '^\s*Article\s*\(\s*(\d+)\s*\)'
+
+  - doc_id: difc-2-2019-en
+    pair: difc-2-2019
+    jurisdiction: difc
+    lang: en
+    authoritative: true
+    law_name: "DIFC Employment Law, DIFC Law No. 2 of 2019 (Consolidated Version No. 5, July 2025)"
+    law_name_ar: "قانون التوظيف لمركز دبي المالي العالمي رقم (2) لسنة 2019 (النسخة الموحدة رقم 5 – يوليو 2025)"
+    url: "https://edge.sitecorecloud.io/dubaiintern0078-difcexperie96c5-production-3253/media/project/difcexperiences/difc/difcwebsite/documents/laws--regulations/employment-law.pdf"
+    file: data/raw/difc-2-2019-en.pdf
+    # DIFC headings look like "27. Vacation Leave"
+    article_pattern: '^\s*(\d{1,3})\.\s+([A-Z][A-Za-z ,’''\-()/]{2,80})$'
+    skip_until_pattern: '^\s*PART 1'   # skip cover page + table of contents

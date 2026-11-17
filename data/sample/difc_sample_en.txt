@@ -1,0 +1,27 @@
+SYNTHETIC SAMPLE FOR DEVELOPMENT AND TESTS ONLY.
+Plain-language paraphrase of selected provisions of the DIFC Employment Law. NOT the official text.
+
+CONTENTS
+14. Right to a written contract
+27. Vacation Leave
+
+PART 1: GENERAL
+
+14. Right to a written contract
+(1) An Employer shall provide an Employee with a written employment contract.
+(2) The contract shall state, among other things, the length and conditions of any probationary period, which shall not exceed six months.
+
+27. Vacation Leave
+(1) An Employee who has been employed for at least 90 days is entitled to at least 20 Work Days of paid Vacation Leave in each Vacation Leave Year.
+(2) An Employee may carry over at least 5 Work Days of unused Vacation Leave to the following Vacation Leave Year.
+
+34. Sick Leave
+(1) An Employee who has completed the probation period is entitled to up to 60 Work Days of sick leave in any 12 month period.
+
+62. Minimum notice periods
+(1) Either party may terminate the employment contract by giving written notice.
+(2) The minimum notice period is 7 days where continuous employment is less than 3 months, 30 days where it is 3 months or more but less than 5 years, and 90 days where it is 5 years or more.
+
+66. Gratuity Payment and Qualifying Scheme Benefits
+(1) Since the introduction of the Qualifying Scheme, the Employer makes monthly contributions for each eligible Employee into a Qualifying Scheme such as DEWS instead of accruing an end of service gratuity.
+(2) The monthly contribution is 5.83 percent of the Employee's basic wage during the first five years of service and 8.33 percent thereafter.
