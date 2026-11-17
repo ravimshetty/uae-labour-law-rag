@@ -320,12 +320,12 @@ Response (abridged):
 
 ## 11. Evaluation
 
-`evals/golden.yaml` has 21 cases: English, Arabic, code-switched, Arabizi, comparison and adversarial guardrail cases. `scripts/eval.py` reports:
+`evals/golden.yaml` has 23 cases: English, Arabic, code-switched, Arabizi, comparison and adversarial guardrail cases. `scripts/eval.py` reports:
 
 | Metric | Sample corpus, offline mode |
 |---|---|
 | Recall@6 | 1.00 |
-| MRR | 0.97 |
+| MRR | 1.00 |
 | Routing accuracy | 1.00 |
 | Citation rate | 1.00 |
 | Mean Arabic ratio of answers | 0.996 |
@@ -359,7 +359,7 @@ uae-labour-law-rag/
 │   └── api/                   # FastAPI app + static RTL UI
 ├── scripts/                   # ingest · ask · eval · download_sources
 ├── evals/golden.yaml
-├── tests/                     # 29 unit + end-to-end tests
+├── tests/                     # 32 unit, API and end-to-end tests
 ├── Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 └── docs/img/                  # screenshots
 ```

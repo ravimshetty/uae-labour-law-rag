@@ -116,6 +116,7 @@ class RAGPipeline:
         # 4) jurisdiction routing
         r = route(red_q, self.s.get("router.default_when_ambiguous", "both"))
         if r.out_of_scope == "adgm":
+            flags.append(GuardrailFlag("adgm_out_of_scope", "block", "ADGM not in knowledge base"))
             return self._refuse(rid, "adgm", flags, t0, red_q, query, vault=vault)
         jur = Jurisdiction(jurisdiction_hint) if jurisdiction_hint in {"federal", "difc", "both"} else r.jurisdiction
 

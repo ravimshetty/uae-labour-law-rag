@@ -11,6 +11,8 @@ cases:
   - {q: "DIFC minimum notice period after 2 years of employment", type: en, jur: difc, expected: [difc-2-2019:art62]}
   - {q: "DEWS contribution percentage in DIFC", type: en, jur: difc, expected: [difc-2-2019:art66]}
   - {q: "كم مدة فترة التجربة في القانون الاتحادي؟", type: ar, jur: federal, expected: [fdl-33-2021:art9]}
+  - {q: "كم ساعة العمل اليومية في القطاع الخاص؟", type: ar, jur: federal, expected: [fdl-33-2021:art17]}
+  - {q: "my company wants overtime, is it paid زيادة or not?", type: code_switch, jur: both, expected: [fdl-33-2021:art19]}
   - {q: "ما هي مدة إجازة الوضع للعاملة؟", type: ar, jur: both, expected: [fdl-33-2021:art30]}
   - {q: "notice period فترة الإنذار if I resign in mainland", type: code_switch, jur: federal, expected: [fdl-33-2021:art43]}
   - {q: "sick leave كم يوم بأجر كامل؟ mainland", type: code_switch, jur: federal, expected: [fdl-33-2021:art31]}

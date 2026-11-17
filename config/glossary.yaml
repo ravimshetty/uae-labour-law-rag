@@ -35,13 +35,17 @@ concepts:
     en: [termination, terminate, dismissal, fired, resign, resignation, end of contract]
     ar: [إنهاء عقد العمل, انهاء العقد, الفصل, الاستقالة, إنهاء الخدمة]
     arabizi: [faṣl, fasl, esti2ala, isti2ala]
+  overtime:
+    en: [overtime, extra hours, overtime pay]
+    ar: [العمل الإضافي, ساعات إضافية, الساعات الإضافية]
+    arabizi: [overtime]
   wages:
     en: [wage, wages, salary, basic salary, pay, remuneration]
     ar: [الأجر, الاجر, الراتب, الأجر الأساسي]
     arabizi: [ratib, raateb, rateb, ajr]
   working_hours:
-    en: [working hours, work hours, overtime, weekly rest, rest day]
-    ar: [ساعات العمل, العمل الإضافي, الراحة الأسبوعية]
+    en: [working hours, work hours, hours per day, daily hours, weekly rest, rest day]
+    ar: [ساعات العمل, ساعة العمل, ساعات العمل اليومية, الراحة الأسبوعية]
     arabizi: [sa3at al 3amal, sa3at el shoghl]
   employment_contract:
     en: [employment contract, labour contract, contract, fixed-term, fixed term]

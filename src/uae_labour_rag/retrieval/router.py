@@ -19,7 +19,7 @@ _DIFC = re.compile(
     r"\bdifc\b|dubai international financial cent(?:re|er)|\bdews\b|qualifying scheme|"
     r"gate (?:village|avenue)|مركز دبي المالي|محاكم المركز", re.I)
 _FEDERAL = re.compile(
-    r"\bmohre\b|\buae labou?r law\b|\bmainland\b|\bonshore\b|federal (?:decree|law)|decree[- ]law|\b33 of 2021\b|"
+    r"\bmohre\b|private sector|القطاع الخاص|\buae labou?r law\b|\bmainland\b|\bonshore\b|federal (?:decree|law)|decree[- ]law|\b33 of 2021\b|"
     r"labour court|\bwps\b|\btasheel\b|tawjeeh|\bjafza\b|\bdmcc\b|\bdso\b|"
     r"وزارة الموارد البشرية|المرسوم بقانون|القانون الاتحادي|البر الرئيسي", re.I)
 _ADGM = re.compile(r"\badgm\b|abu dhabi global market|سوق أبوظبي العالمي", re.I)
