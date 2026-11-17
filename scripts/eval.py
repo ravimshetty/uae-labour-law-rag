@@ -7,6 +7,9 @@ import argparse
 import json
 import statistics
 import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Arabic output on Windows consoles
 from collections import defaultdict
 from pathlib import Path
 

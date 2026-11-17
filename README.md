@@ -241,7 +241,8 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 
 python scripts/ingest.py --sources data/sample/sources.yaml   # build index from the sample corpus
-python scripts/ask.py "How much gratuity do I get after 7 years in mainland?" --debug
+python scripts/smoke_test.py                                  # 10 real queries -> PASS/FAIL
+python scripts/ask.py "How much gratuity do I get after 7 years in mainland?" --verify
 uvicorn uae_labour_rag.api.app:app --app-dir src --reload --port 8000
 # open http://localhost:8000
 ```
