@@ -26,6 +26,7 @@ from .retrieval.hybrid import ArticleHit, CrossEncoderReranker, HybridRetriever
 from .retrieval.router import route
 from .text.arabic import to_arabic_indic_digits
 from .text.codeswitch import Glossary, normalize_query
+from .verification import build_report
 
 log = logging.getLogger(__name__)
 MAX_SOURCE_CHARS = 2500  # per article per language in the prompt
@@ -90,7 +91,8 @@ class RAGPipeline:
                               redactions=vault.summary() if vault else {})
 
     # ------------------------------------------------------------------ main
-    def answer(self, query: str, jurisdiction_hint: str | None = None, debug: bool = False) -> PipelineResult:
+    def answer(self, query: str, jurisdiction_hint: str | None = None, debug: bool = False,
+               verify: bool = False) -> PipelineResult:
         t0, rid = time.time(), uuid.uuid4().hex[:12]
 
         # 1) privacy first: redact so even refusals/audit never contain raw PII
@@ -147,12 +149,14 @@ class RAGPipeline:
             return self._refuse(rid, "no_context", flags, t0, red_q, query, jur.value, vault)
 
         answer = finalize(out.text, high_stakes)
+        by_ref = {s["ref"]: s for s in sources}
+        # English verification report for non-Arabic reviewers (computed on the redacted answer)
+        verification = build_report(answer, by_ref, self.glossary, self.llm) if verify else None
         if self.s.get("privacy.rehydrate_user_pii_in_answer", False):
             answer = vault.rehydrate(answer)
         if self.s.get("app.digits") == "arabic_indic":
             answer = to_arabic_indic_digits(answer)
 
-        by_ref = {s["ref"]: s for s in sources}
         citations = []
         for ref in out.citations_used:
             s = by_ref[ref]
@@ -171,7 +175,8 @@ class RAGPipeline:
         dbg = {"normalized": nq.debug(), "route": r.reason, "retrieved": [h.key for h in hits],
                "latency_ms": latency} if debug else {}
         return PipelineResult(rid, answer, gist if self.s.get("app.include_english_gist", True) else "",
-                              jur.value, citations, flags, redactions=vault.summary(), debug=dbg)
+                              jur.value, citations, flags, redactions=vault.summary(), debug=dbg,
+                              verification=verification)
 
 
 def get_pipeline(config: str | Path | None = None) -> RAGPipeline:

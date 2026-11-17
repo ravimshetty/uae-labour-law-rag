@@ -17,15 +17,15 @@ concepts:
     arabizi: [fatrat al tajruba, fatret tajrobe, tajruba]
   annual_leave:
     en: [annual leave, vacation leave, vacation, paid leave, holiday entitlement]
-    ar: [الإجازة السنوية, الاجازة السنوية, إجازة سنوية, اجازة]
+    ar: [الإجازة السنوية, الاجازة السنوية, إجازة سنوية, الإجازة المدفوعة]
     arabizi: [ijaza, ejaza, ajaza, ijaza sanawiya]
   sick_leave:
     en: [sick leave, sickness leave, medical leave, sick pay]
-    ar: [الإجازة المرضية, اجازة مرضية, إجازة مرضية]
+    ar: [الإجازة المرضية, اجازة مرضية, إجازة مرضية, إجازة مرضية مدفوعة]
     arabizi: [ijaza maradiya, ejaza maradeye]
   maternity_leave:
     en: [maternity leave, maternity, maternity pay]
-    ar: [إجازة الوضع, إجازة الأمومة, اجازة الامومة]
+    ar: [إجازة الوضع, إجازة وضع, إجازة الأمومة, اجازة الامومة]
     arabizi: [ijazat al umooma]
   notice_period:
     en: [notice period, notice, termination notice, resignation notice]

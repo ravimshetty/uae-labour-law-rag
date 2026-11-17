@@ -20,6 +20,7 @@ Users ask in **English** (or mixed English/Arabic/Arabizi). The system answers i
 4. [Bilingual code-switching](#4-bilingual-code-switching)
 5. [Guardrails](#5-guardrails)
 6. [Data privacy](#6-data-privacy)
+   - [Validating Arabic answers without reading Arabic](#validating-arabic-answers-without-reading-arabic)
 7. [Quick start](#7-quick-start)
 8. [Using the official laws](#8-using-the-official-laws)
 9. [Switching to OpenAI / Azure OpenAI](#9-switching-to-openai--azure-openai)
@@ -204,6 +205,28 @@ Legal questions often carry personal data: *“My Emirates ID is 784-…, salary
 - **Data residency.** Run with **Azure OpenAI in the UAE North region**, or with self-hosted models (bge-m3 + an open-weights LLM), so prompts stay in the UAE. This aligns with **UAE PDPL (Federal Decree-Law No. 45 of 2021)** and the **DIFC Data Protection Law No. 5 of 2020**. Confirm the obligations that apply with your DPO.
 - **Production upgrade:** add Microsoft Presidio with an Arabic NER model (e.g. CAMeLBERT-NER) for names and addresses in free text (`requirements-optional.txt`).
 
+### Validating Arabic answers without reading Arabic
+
+A reviewer shouldn't have to trust Arabic they can't read. With `verify: true` (API), `--verify` (CLI), or the **"Verify in English"** checkbox (UI), each Arabic sentence is checked against things an English reader *can* check (`src/uae_labour_rag/verification.py`):
+
+| Check | How it works | Needs an LLM? |
+|---|---|---|
+| **Citation → English source** | shows the cited article in English: the official EN translation (federal) or the original (DIFC) | no |
+| **Numbers** | every number in the Arabic sentence (days, %, years) must appear in the cited English article. Numbers read the same in any language | no |
+| **Topics** | legal terms found in the Arabic sentence (bilingual glossary) must match the topics of the cited English article | no |
+| **Back-translation** | an independent LLM call translates the Arabic back to English **literally** | yes |
+| **LLM judge** | compares the back-translation with the English source: SUPPORTED / PARTIAL / UNSUPPORTED | yes |
+
+Each sentence gets ✅ **verified**, ⚠️ **review** or ❌ **unsupported**. In a tamper test, changing "30 days" to "45 days" gives ❌, and citing the annual-leave article for a gratuity claim gives ⚠️.
+
+![Verification report](docs/img/verify.png)
+
+**Recommended review process for a team without Arabic speakers:**
+1. **Automatic:** every answer passes the output guardrails, and reviewers read the English verification report.
+2. **Independent tool:** spot-check with a *different* translation engine (Google/DeepL/Microsoft) to avoid one model checking itself.
+3. **Native sampling:** have an Arabic-speaking legal reviewer check a weekly random sample (e.g. 5%) plus every ⚠️/❌ answer. Add confirmed answers to `evals/golden.yaml`.
+4. **Terminology:** keep `config/glossary.yaml` reviewed by a native legal translator, because it drives both retrieval and the topic check.
+
 ---
 
 ## 7. Quick start
@@ -296,7 +319,7 @@ AZURE_OPENAI_API_KEY=...
 `POST /api/ask`
 
 ```json
-{ "query": "how many days ijaza in DIFC?", "jurisdiction": null, "debug": false }
+{ "query": "how many days ijaza in DIFC?", "jurisdiction": null, "debug": false, "verify": true }
 ```
 
 Response (abridged):
@@ -359,7 +382,7 @@ uae-labour-law-rag/
 │   └── api/                   # FastAPI app + static RTL UI
 ├── scripts/                   # ingest · ask · eval · download_sources
 ├── evals/golden.yaml
-├── tests/                     # 32 unit, API and end-to-end tests
+├── tests/                     # 36 unit, API and end-to-end tests
 ├── Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 └── docs/img/                  # screenshots
 ```

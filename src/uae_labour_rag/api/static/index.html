@@ -56,6 +56,15 @@
   .tools[hidden] { display: none; }
   .tools { display: flex; gap: 8px; margin-top: 12px; }
   .tools button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 5px 10px; font-size: 12.5px; cursor: pointer; }
+  .verify-toggle { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13.5px; color: var(--ink); }
+  .vrep { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .vrep h3 { margin: 0 0 4px; font-size: 14px; }
+  .vrep .sum { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .vrow { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; font-size: 13.5px; }
+  .vrow .ar { direction: rtl; text-align: right; font-family: "IBM Plex Sans Arabic", sans-serif; margin-bottom: 6px; }
+  .vrow .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .vrow .en { margin: 2px 0 6px; }
+  .ok { color: var(--accent); } .bad { color: var(--block); } .rev { color: var(--warn); }
   .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-right-color: transparent; border-radius: 50%; animation: s 0.8s linear infinite; vertical-align: -2px; }
   @keyframes s { to { transform: rotate(360deg); } }
 </style>
@@ -80,6 +89,7 @@
       <button class="go" id="go">Ask · اسأل</button>
     </div>
     <div class="examples" id="ex"></div>
+    <label class="verify-toggle"><input type="checkbox" id="verify" checked /> Verify in English (for reviewers who don't read Arabic)</label>
     <p class="note">Personal details (Emirates ID, phone, email, IBAN, passport) are masked before the question leaves this server.
       Answers are general legal information, not legal advice.</p>
   </section>
@@ -93,6 +103,7 @@
       <button id="toggleGist">Show English gist</button>
     </div>
     <div class="cites" id="cites"></div>
+    <div class="vrep" id="vrep" hidden></div>
   </section>
 </main>
 
@@ -160,8 +171,33 @@ function render(d) {
       <div class="snip">${esc(c.snippet)}…</div>
       ${c.source_url ? `<a href="${esc(c.source_url)}" target="_blank" rel="noopener noreferrer">official source ↗</a>` : ""}
     </div>`).join("");
+  renderVerification(d.verification);
   document.querySelectorAll(".cite").forEach((el) =>
     el.onclick = () => document.getElementById("c-" + el.dataset.ref)?.scrollIntoView({ behavior: "smooth" }));
+}
+
+const ICON = { verified: '<b class="ok">✅ verified</b>', review: '<b class="rev">⚠️ review</b>', unsupported: '<b class="bad">❌ unsupported</b>' };
+function renderVerification(v) {
+  const el = $("vrep");
+  if (!v || !v.sentences || !v.sentences.length) { el.hidden = true; el.innerHTML = ""; return; }
+  const s = v.summary;
+  el.innerHTML = `<h3>English verification report</h3>
+    <div class="sum">${s.verified} verified · ${s.review} to review · ${s.unsupported} unsupported —
+      mode: ${v.mode === "llm" ? "back-translation + LLM judge + deterministic checks" : "deterministic checks (numbers, topics, citations)"}</div>` +
+    v.sentences.map((x) => {
+      const nums = Object.entries(x.numbers).map(([n, ok]) => `<span class="${ok ? "ok" : "bad"}">${esc(n)} ${ok ? "✓" : "✗"}</span>`).join(" ") || "—";
+      return `<div class="vrow">
+        <div>${ICON[x.verdict] || x.verdict}</div>
+        <div class="ar">${esc(x.arabic)}</div>
+        ${x.back_translation ? `<div class="k">Back-translation</div><div class="en">${esc(x.back_translation)}</div>` : ""}
+        <div class="k">Topics detected in this Arabic sentence</div><div class="en">${esc(x.concepts.join(", ") || "—")} ${x.concepts_match ? '<span class="ok">✓ matches source</span>' : '<span class="bad">✗ mismatch</span>'}</div>
+        <div class="k">Numbers vs English source</div><div class="en">${nums}</div>
+        <div class="k">Cited source (English)</div><div class="en">${esc(x.cited_articles.join("; "))}<br><i>${esc(x.source_en)}</i></div>
+        ${x.judge ? `<div class="k">LLM judge</div><div class="en">${esc(x.judge)} — ${esc(x.judge_reason || "")}</div>` : ""}
+        ${x.notes.length ? `<div class="k">Notes</div><div class="en bad">${esc(x.notes.join("; "))}</div>` : ""}
+      </div>`;
+    }).join("");
+  el.hidden = false;
 }
 
 async function ask() {
@@ -171,7 +207,7 @@ async function ask() {
   try {
     const r = await fetch("/api/ask", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, jurisdiction: jurisdiction || null }),
+      body: JSON.stringify({ query, jurisdiction: jurisdiction || null, verify: $("verify").checked }),
     });
     if (!r.ok) throw new Error(r.status === 429 ? "Too many requests – wait a minute." : `Error ${r.status}`);
     render(await r.json());

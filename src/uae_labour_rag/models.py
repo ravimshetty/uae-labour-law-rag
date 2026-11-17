@@ -90,6 +90,7 @@ class PipelineResult:
     blocked: bool = False
     redactions: dict[str, int] = field(default_factory=dict)
     debug: dict[str, Any] = field(default_factory=dict)
+    verification: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -102,4 +103,5 @@ class PipelineResult:
             "blocked": self.blocked,
             "redactions": self.redactions,
             "debug": self.debug,
+            "verification": self.verification,
         }

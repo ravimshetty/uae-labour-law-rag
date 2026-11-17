@@ -25,6 +25,7 @@ class AskRequest(BaseModel):
     query: str = Field(..., min_length=3, max_length=2000, examples=["How much gratuity after 7 years?"])
     jurisdiction: str | None = Field(None, pattern="^(federal|difc|both)$")
     debug: bool = False
+    verify: bool = False   # English verification report for non-Arabic reviewers
 
 
 @lru_cache(maxsize=1)
@@ -72,4 +73,4 @@ def health() -> dict:
 @app.post("/api/ask")
 def ask(req: AskRequest, request: Request) -> dict:
     _rate_limit(request.client.host if request.client else "anon")
-    return pipeline().answer(req.query, req.jurisdiction, debug=req.debug).to_dict()
+    return pipeline().answer(req.query, req.jurisdiction, debug=req.debug, verify=req.verify).to_dict()

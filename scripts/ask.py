@@ -12,6 +12,7 @@ if __name__ == "__main__":
     ap.add_argument("question")
     ap.add_argument("--jurisdiction", choices=["federal", "difc", "both"])
     ap.add_argument("--debug", action="store_true")
+    ap.add_argument("--verify", action="store_true", help="English verification report")
     a = ap.parse_args()
-    res = get_pipeline().answer(a.question, a.jurisdiction, debug=a.debug)
+    res = get_pipeline().answer(a.question, a.jurisdiction, debug=a.debug, verify=a.verify)
     print(json.dumps(res.to_dict(), ensure_ascii=False, indent=2))
