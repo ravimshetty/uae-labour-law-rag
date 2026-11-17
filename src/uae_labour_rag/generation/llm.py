@@ -2,7 +2,6 @@
 offline deterministic `MockLLM` used for tests / demos without API keys."""
 from __future__ import annotations
 
-import os
 import re
 from typing import Protocol
 
@@ -14,23 +13,20 @@ class LLM(Protocol):
 
 
 class OpenAIChat:
+    """OpenAI / Azure OpenAI chat via the stdlib REST client (no compiled dependencies)."""
+
     def __init__(self, model: str, temperature: float = 0.0, max_tokens: int = 900,
                  azure: bool = False, timeout_s: int = 60):
-        from openai import AzureOpenAI, OpenAI
+        from ..openai_http import OpenAIHTTP
 
-        self.client = (
-            AzureOpenAI(api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-10-21"), timeout=timeout_s)
-            if azure else OpenAI(timeout=timeout_s)
-        )
+        self.client = OpenAIHTTP(azure=azure, timeout_s=timeout_s)
         self.model, self.temperature, self.max_tokens = model, temperature, max_tokens
         self.name = f"{'azure' if azure else 'openai'}:{model}"
 
     def complete(self, system: str, user: str) -> str:
-        resp = self.client.chat.completions.create(
-            model=self.model, temperature=self.temperature, max_tokens=self.max_tokens,
-            messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
-        )
-        return resp.choices[0].message.content or ""
+        return self.client.chat(self.model, [{"role": "system", "content": system},
+                                             {"role": "user", "content": user}],
+                                self.temperature, self.max_tokens)
 
 
 class MockLLM:

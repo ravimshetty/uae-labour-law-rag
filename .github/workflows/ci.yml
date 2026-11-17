@@ -7,6 +7,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install -r requirements-dev.txt
+      - run: pip install -r requirements-dev.txt -r requirements-api.txt httpx numpy
       - run: pytest -q
+      - name: Pure-Python path (simulated Windows Smart App Control)
+        run: python scripts/simulate_app_control.py
       - run: python scripts/ingest.py --sources data/sample/sources.yaml && python scripts/eval.py

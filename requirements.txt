@@ -1,10 +1,4 @@
-fastapi>=0.115
-uvicorn[standard]>=0.30
-pydantic>=2.7
-numpy>=1.26
-PyYAML>=6.0
+# Core – pure Python only. Works on Windows with Smart App Control / WDAC enabled.
+PyYAML>=6.0          # falls back to its pure-Python parser if the libyaml DLL is blocked
 pypdf>=4.2
-pdfplumber>=0.11
 beautifulsoup4>=4.12
-requests>=2.31
-openai>=1.40

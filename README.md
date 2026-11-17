@@ -68,13 +68,13 @@ flowchart LR
 | Loading | `ingest/loaders.py` | pypdf / pdfplumber | Azure Document Intelligence (`ar` OCR) for scanned PDFs |
 | Chunking | `ingest/chunker.py` | Article parents + clause children | same |
 | Lexical index | `index/bm25.py` | built-in BM25 with Arabic stemming | OpenSearch with `arabic` analyzer |
-| Dense index | `index/store.py` | NumPy cosine | Qdrant / pgvector / Azure AI Search |
+| Dense index | `index/store.py` | pure-Python cosine (NumPy if available) | Qdrant / pgvector / Azure AI Search |
 | Embeddings | `index/embeddings.py` | char-n-gram hashing | `text-embedding-3-large` · `bge-m3` |
 | Reranker | `retrieval/hybrid.py` | RRF only | `BAAI/bge-reranker-v2-m3` |
 | LLM | `generation/llm.py` | `MockLLM` (extractive) | GPT-4o / Azure OpenAI (UAE North) |
 | Guardrails | `guardrails/*` | deterministic rules | + LLM classifier / Azure AI Content Safety |
 | Privacy | `privacy/*` | UAE regex PII + vault | + Presidio with Arabic NER |
-| UI / API | `api/` | FastAPI + single-page RTL UI | behind API gateway + SSO |
+| UI / API | `api/`, `scripts/serve.py` | stdlib server or FastAPI + single-page RTL UI | behind API gateway + SSO |
 
 ---
 
@@ -231,30 +231,39 @@ Each sentence gets ✅ **verified**, ⚠️ **review** or ❌ **unsupported**. I
 
 ## 7. Quick start
 
-### Option A — local Python (offline, about 1 minute)
+### Option A — local Python (pure Python, works with Windows Smart App Control)
 
-```bash
+The core install has **no compiled dependencies**. NumPy, pydantic, the OpenAI SDK and pdfplumber are optional, so it runs even when Windows blocks unsigned DLLs ("An Application Control policy has blocked this file").
+
+```powershell
 git clone https://github.com/ravimshetty/uae-labour-law-rag.git
 cd uae-labour-law-rag
 python -m venv .venv
-# Windows: .venv\Scripts\activate      macOS/Linux: source .venv/bin/activate
-pip install -r requirements-dev.txt
+.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements-dev.txt
 
 python scripts/ingest.py --sources data/sample/sources.yaml   # build index from the sample corpus
 python scripts/smoke_test.py                                  # 10 real queries -> PASS/FAIL
-python scripts/ask.py "How much gratuity do I get after 7 years in mainland?" --verify
-uvicorn uae_labour_rag.api.app:app --app-dir src --reload --port 8000
-# open http://localhost:8000
+python -m pytest -q
+python scripts/serve.py                                       # stdlib web server -> http://localhost:8000
 ```
 
-> On Windows, if Smart App Control blocks `pytest.exe`/`uvicorn.exe`, use `python -m pytest` and `python -m uvicorn ...`, or use Docker (Option B).
+`scripts/serve.py` serves the same UI and API as the FastAPI app, using only the standard library. If NumPy or pdfplumber are installed and allowed, they're picked up automatically for speed.
+`scripts/simulate_app_control.py` blocks every compiled package and re-runs ingest, tests and the smoke test. CI runs it on every push so this path keeps working.
 
 ### Option B — Docker
 
 ```bash
 cp .env.example .env          # Windows: copy .env.example .env
 docker compose up --build
-# open http://localhost:8000
+# open http://localhost:8000   (FastAPI + uvicorn inside the container)
+```
+
+### Option C — FastAPI locally (Linux/macOS, or Windows without app-control policies)
+
+```bash
+pip install -r requirements-dev.txt -r requirements-api.txt
+uvicorn uae_labour_rag.api.app:app --app-dir src --reload --port 8000
 ```
 
 ### Run tests and evals
@@ -310,6 +319,8 @@ RAG_EMBEDDINGS__MODEL=<embedding-deployment-name>
 AZURE_OPENAI_ENDPOINT=...
 AZURE_OPENAI_API_KEY=...
 ```
+
+`.env` is loaded automatically, and real environment variables override it. OpenAI and Azure are called over plain HTTPS with the standard library (`src/uae_labour_rag/openai_http.py`), so no SDK is needed.
 
 **Re-run `scripts/ingest.py` after changing the embedding provider**, because vectors from different models aren't compatible. Other knobs are in `config/settings.yaml`: `final_k`, `use_reranker`, `min_arabic_ratio`, `digits: arabic_indic`, and more.
 
@@ -383,7 +394,7 @@ uae-labour-law-rag/
 │   └── api/                   # FastAPI app + static RTL UI
 ├── scripts/                   # ingest · ask · eval · download_sources
 ├── evals/golden.yaml
-├── tests/                     # 36 unit, API and end-to-end tests
+├── tests/                     # 39 unit, API and end-to-end tests
 ├── Dockerfile · docker-compose.yml · .github/workflows/ci.yml
 └── docs/img/                  # screenshots
 ```

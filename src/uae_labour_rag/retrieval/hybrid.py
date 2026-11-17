@@ -17,8 +17,6 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 
-import numpy as np
-
 from ..index.embeddings import Embedder
 from ..index.store import KnowledgeBase
 from ..models import Chunk, Jurisdiction, RetrievedChunk
@@ -48,7 +46,7 @@ class HybridRetriever:
         # Hashing embeddings are monolingual -> only compare same-language text.
         # Multilingual embeddings (OpenAI / bge-m3) may match EN query <-> AR article.
         self.cross_lingual_dense = getattr(embedder, "cross_lingual", True)
-        self._lang = np.array([c.lang.value for c in kb.children])
+        self._lang = [c.lang.value for c in kb.children]
         self.top_k_bm25, self.top_k_dense, self.rrf_k = top_k_bm25, top_k_dense, rrf_k
         self.reranker = reranker
 
@@ -68,7 +66,8 @@ class HybridRetriever:
 
     def retrieve_children(self, query_en: str, query_ar: str, jurisdiction: Jurisdiction) -> list[RetrievedChunk]:
         mask = self.kb.mask_for(jurisdiction)
-        en, ar = mask & (self._lang == "en"), mask & (self._lang == "ar")
+        en = [m and lang == "en" for m, lang in zip(mask, self._lang)]
+        ar = [m and lang == "ar" for m, lang in zip(mask, self._lang)]
         lists = {
             # lexical: each query only against its own language
             "bm25_en": self._bm25(query_en, en),

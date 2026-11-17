@@ -4,9 +4,13 @@ Some government portals block scripted downloads or change URLs; if a download
 fails, open the URL in a browser and save the PDF to the `file` path shown.
 """
 import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 from pathlib import Path
 
-import requests
+import urllib.request
+
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,12 +24,13 @@ def main() -> None:
             continue
         dest.parent.mkdir(parents=True, exist_ok=True)
         try:
-            r = requests.get(d["url"], timeout=60, headers={"User-Agent": "Mozilla/5.0"})
-            r.raise_for_status()
-            if b"%PDF" not in r.content[:1024]:
+            req = urllib.request.Request(d["url"], headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                content = r.read()
+            if b"%PDF" not in content[:1024]:
                 raise ValueError("response is not a PDF (portal page?)")
-            dest.write_bytes(r.content)
-            print(f"↓ {dest.name} ({len(r.content)//1024} KB)")
+            dest.write_bytes(content)
+            print(f"↓ {dest.name} ({len(content)//1024} KB)")
         except Exception as e:  # noqa: BLE001
             print(f"✗ {d['doc_id']}: {e}\n   -> save manually from {d['url']} to {dest}", file=sys.stderr)
 

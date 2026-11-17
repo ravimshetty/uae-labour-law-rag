@@ -44,7 +44,22 @@ class Settings:
         return p if p.is_absolute() else ROOT / p
 
 
+def load_dotenv(path: Path = ROOT / ".env") -> None:
+    """Tiny .env loader (stdlib). Real environment variables always win."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        value = value.split(" #", 1)[0].strip().strip('"').strip("'")
+        if value:
+            os.environ.setdefault(key.strip(), value)
+
+
 def load_settings(path: str | Path | None = None, overrides: dict[str, Any] | None = None) -> Settings:
+    load_dotenv()
     cfg_path = Path(path or os.getenv("RAG_CONFIG", DEFAULT_CONFIG))
     raw: dict[str, Any] = yaml.safe_load(cfg_path.read_text(encoding="utf-8")) or {}
 

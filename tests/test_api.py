@@ -1,8 +1,8 @@
 """HTTP-level tests for the FastAPI app (skipped if fastapi/httpx are not installed)."""
 import pytest
 
-pytest.importorskip("fastapi")
-pytest.importorskip("httpx")
+pytest.importorskip("fastapi", exc_type=ImportError)  # DLL blocks raise ImportError
+pytest.importorskip("httpx", exc_type=ImportError)
 from fastapi.testclient import TestClient  # noqa: E402
 
 from uae_labour_rag.api import app as app_module  # noqa: E402

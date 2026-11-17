@@ -1,0 +1,5 @@
+# FastAPI server (Docker / Linux / production). Needs compiled pydantic-core.
+# On a locked-down Windows laptop use `python scripts/serve.py` instead.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
